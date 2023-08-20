@@ -6,6 +6,38 @@
     overflow: hidden;
   }
   
+  #gamescore{
+      
+    display: flex;
+  }
+  /**
+  * how to not repeating same attributes ? 
+  */
+  #startButton{
+      display: block;
+    padding: 30px;
+    margin: 20px;
+  }
+  
+    #stopButton{
+      display: block;
+    padding: 30px;
+    margin: 20px;
+  }
+    #startButton{
+      display: block;
+    padding: 30px;
+    margin: 20px;
+  }
+
+
+  
+  #speedUpButton{
+           display: block;
+    padding: 30px;
+    margin: 20px;
+  }
+  
   @keyframes balloonUp {
     0% {
       transform: translateY(0);

@@ -1,18 +1,24 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Balloon Explosion Animation</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>game</title>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
-    <canvas id="canvas" width="400" height="400"></canvas>
-    <script src="script.js"></script>
+    <div id="gamescore">
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+        <button id="speedUpButton">Speed Up Balloon Generation</button>
+    </div>
+
+
+    <div id="gameContainer"></div>
+    <script src="game.js"></script>
 </body>
 
 </html>

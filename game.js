@@ -6,7 +6,8 @@ const speedUpButton = document.getElementById("speedUpButton");
 stopButton.style.display = "none";
 
 let interval;
-let balloonInterval = 2000; // Initial interval duration (in milliseconds)
+let balloonInterval = 1000; // Initial interval duration (in milliseconds)
+console.log("initial Balloon interval:", balloonInterval, "ms");
 
 startButton.addEventListener("click", startGame);
 stopButton.addEventListener("click", stopGame);
@@ -24,10 +25,11 @@ function stopGame() {
   clearInterval(interval);
   gameContainer.innerHTML = " GAME OVER";
 }
+1;
 
 function speedUpGame() {
   // Reduce the balloon interval by a certain amount
-  balloonInterval = Math.max(balloonInterval - 300, 100); // Minimum interval of 100ms
+  balloonInterval = Math.max(balloonInterval - 500, 10); // Minimum interval of 10ms
   console.log("Balloon interval:", balloonInterval, "ms");
 }
 
@@ -54,7 +56,7 @@ function createBalloon() {
     } else {
       clearInterval(interval);
     }
-  }, 1000); // Generate a balloon every <prescribed> seconds
+  }, balloonInterval); // Generate a balloon every <prescribed> seconds
 
   balloon.addEventListener("animationend", () => {
     gameContainer.removeChild(balloon);
