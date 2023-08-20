@@ -1,0 +1,53 @@
+#gameContainer {
+  cursor: url('gun-small.png'), auto;
+    position: relative;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+  }
+  
+  @keyframes balloonUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100vh);
+    }
+  }
+  
+  @keyframes balloonExplode {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  
+  /* Add the following CSS rules */
+.balloon {
+  width: 200px;
+  height: 284px;
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  animation: balloonUp 10s linear forwards;
+  background-image: url("balloon.png");
+  object-fit: cover;
+}
+
+.balloon.explode {
+  animation: balloonExplode 0.5s forwards;
+}
+
+.explode-balloon {
+  width: 200px; /* Match the balloon width */
+  height: 284px; /* Match the balloon height */
+  background-image: url('explode.gif');
+  background-size: cover;
+  position: absolute;
+  bottom: 0;
+  animation: balloonExplode 0.5s forwards;
+}
