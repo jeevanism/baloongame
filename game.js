@@ -1,9 +1,10 @@
 const gameContainer = document.getElementById("gameContainer");
 const stopButton = document.getElementById("stopButton");
 const startButton = document.getElementById("startButton");
-const speedUpButton = document.getElementById("speedUpButton");
+// const speedUpButton = document.getElementById("speedUpButton");
 
 stopButton.style.display = "none";
+var baloonPoppedCounter = 0;
 
 let interval;
 let balloonInterval = 1000; // Initial interval duration (in milliseconds)
@@ -11,7 +12,7 @@ console.log("initial Balloon interval:", balloonInterval, "ms");
 
 startButton.addEventListener("click", startGame);
 stopButton.addEventListener("click", stopGame);
-speedUpButton.addEventListener("click", speedUpGame);
+// speedUpButton.addEventListener("click", speedUpGame);
 
 function startGame() {
   startButton.style.display = "none";
@@ -23,15 +24,14 @@ function stopGame() {
   startButton.style.display = "block";
   stopButton.style.display = "none";
   clearInterval(interval);
-  gameContainer.innerHTML = " GAME OVER";
-}
-1;
+  gameContainer.innerHTML = `Game Over - you have popped ${baloonPoppedCounter} Baloons !`;
+}1
 
-function speedUpGame() {
-  // Reduce the balloon interval by a certain amount
-  balloonInterval = Math.max(balloonInterval - 500, 10); // Minimum interval of 10ms
-  console.log("Balloon interval:", balloonInterval, "ms");
-}
+// function speedUpGame() {
+//   // Reduce the balloon interval by a certain amount
+//   balloonInterval = Math.max(balloonInterval - 500, 10); // Minimum interval of 10ms
+//   console.log("Balloon interval:", balloonInterval, "ms");
+// }
 
 function createBalloon() {
   const balloon = document.createElement("div");
@@ -46,7 +46,8 @@ function createBalloon() {
       balloon.className = "balloon";
       balloon.addEventListener("click", () => {
         popBalloon(balloon);
-        console.log(balloon);
+        baloonPoppedCounter = baloonPoppedCounter +1;
+        console.log('you have popped ' + baloonPoppedCounter);
       });
 
       const column = Math.floor(Math.random() * 4); // Random column
