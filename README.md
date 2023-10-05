@@ -1,33 +1,8 @@
-# Simple Baloon Game - HTML + CSS + Javascript
-##### Progressive Learning to Frontend Dev
-Popping Baloon is a hyper-casual game that we can learn more about Frontend development. In this repo, I am building a simple game with basic HTML,CSS,JavaScript then progress into a full-featured ReactJs game. I will also port it into Vue.Js
+# React + Vite
 
-#### [Demo Link](https://jeevanism.com/balloon/) 
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Features
+Currently, two official plugins are available:
 
-- No external CSS
-- Basic JavaScript functions
-- CSS Animation Features
-
-Markdown is a lightweight markup language based on the formatting conventions
-
-## Local Dev 
-- clone the repo 
-- open the index.html in Web Browser
-
-## WIP - React App
-- checkout into react-game branch
-
-## Future Plans
-- Build a ReactNative App
-- Port into VueJS
-- Connect with a Backend to save Scores
-
-## License
-
-MIT
- 
-
- 
- 
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

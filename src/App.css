@@ -1,0 +1,109 @@
+/*
+* A simple balloon popup game 
+* 2023 - Jeevanism.com 
+*/
+
+:root {
+  --balloon-width: 200px;
+  --balloon-height: 284px;
+  --explode-balloon-image: url('explode.gif');
+  --explode-balloon-image-mobile: url('explode-mobile.gif');
+}
+
+body{
+  height: 100vh;
+  background-color: #c8ae5b;
+}
+
+#gameContainer {
+  cursor: url('gun-small.png'), auto;
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+  margin-top: 2rem;
+}
+
+
+#gamescore {
+  display: block;
+  padding:10px;
+  background-color:#171717;
+}
+
+#startButton,
+#stopButton {
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+
+#speedUpButton {
+  display: block;
+  padding: 30px;
+  margin: 20px;
+}
+
+@keyframes balloonUp {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-100vh);
+  }
+}
+
+@keyframes balloonExplode {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+
+.balloon.explode {
+  animation: balloonExplode 0.5s forwards;
+}
+
+
+.balloon {
+  width: var(--balloon-width);
+  height: var(--balloon-height);
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  animation: balloonUp 10s linear forwards;
+  background-image: url("balloon.png");
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.explode-balloon {
+  width: var(--balloon-width);
+  height: var(--balloon-height);
+  background-image: var(--explode-balloon-image);
+  background-size: cover;
+  position: absolute;
+  bottom: 0;
+  border-radius: 50%;
+  animation: balloonExplode 0.5s forwards;
+}
+
+@media screen and (max-width: 480px) {
+  .balloon {
+    width: 75px;
+    height: 107px;
+    background-image: url("balloon-mobile.png");
+  }
+
+  .explode-balloon {
+    background-image: var(--explode-balloon-image-mobile);
+  }
+}
