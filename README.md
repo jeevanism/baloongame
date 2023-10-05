@@ -16,8 +16,10 @@ Markdown is a lightweight markup language based on the formatting conventions
 - clone the repo 
 - open the index.html in Web Browser
 
+## WIP - React App
+- checkout into react-game branch
+
 ## Future Plans
-- convert into a React App
 - Build a ReactNative App
 - Port into VueJS
 - Connect with a Backend to save Scores
