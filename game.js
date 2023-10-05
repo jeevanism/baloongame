@@ -15,6 +15,7 @@ stopButton.addEventListener("click", stopGame);
 // speedUpButton.addEventListener("click", speedUpGame);
 
 function startGame() {
+  gameContainer.innerHTML = '';
   startButton.style.display = "none";
   stopButton.style.display = "block";
   createBalloon();
@@ -25,7 +26,8 @@ function stopGame() {
   stopButton.style.display = "none";
   clearInterval(interval);
   gameContainer.innerHTML = `Game Over - you have popped ${baloonPoppedCounter} Baloons !`;
-}1
+  baloonPoppedCounter = 0;
+}
 
 // function speedUpGame() {
 //   // Reduce the balloon interval by a certain amount
