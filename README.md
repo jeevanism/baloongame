@@ -1,6 +1,6 @@
-# Simple Baloon Game - HTML + CSS + Javascript
+# Simple Balloon Game - HTML + CSS + Javascript
 ##### Progressive Learning to Frontend Dev
-Popping Baloon is a hyper-casual game that we can learn more about Frontend development. In this repo, I am building a simple game with basic HTML,CSS,JavaScript then progress into a full-featured ReactJs game. I will also port it into Vue.Js
+Popping Balloon is a hyper-casual game that we can learn more about Frontend development. In this repo, I am building a simple game with basic HTML,CSS,JavaScript then progress into a full-featured ReactJs game. I will also port it into Vue.Js
 
 #### [Demo Link](https://jeevanism.com/popupballoon/)
 

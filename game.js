@@ -6,7 +6,7 @@ const scoredisplay = document.getElementById("scoredisplay");
 // const speedUpButton = document.getElementById("speedUpButton");
 
 stopButton.style.display = "none";
-var baloonPoppedCounter = 0;
+var BalloonPoppedCounter = 0;
 
 let interval;
 let balloonInterval = 1000; // Initial interval duration (in milliseconds)
@@ -27,8 +27,8 @@ function stopGame() {
   startButton.style.display = "block";
   stopButton.style.display = "none";
   clearInterval(interval);
-  gameContainer.innerHTML = `Game Over - you have popped ${baloonPoppedCounter} Baloons !`;
-  baloonPoppedCounter = 0;
+  gameContainer.innerHTML = `Game Over - you have popped ${BalloonPoppedCounter} Balloons !`;
+  BalloonPoppedCounter = 0;
 }
 
 // function speedUpGame() {
@@ -50,8 +50,8 @@ function createBalloon() {
       balloon.className = "balloon";
       balloon.addEventListener("click", () => {
         popBalloon(balloon);
-        baloonPoppedCounter = baloonPoppedCounter +1;
-        console.log('you have popped ' + baloonPoppedCounter);
+        BalloonPoppedCounter = BalloonPoppedCounter +1;
+        console.log('you have popped ' + BalloonPoppedCounter);
       });
 
       const column = Math.floor(Math.random() * 4); // Random column
@@ -73,7 +73,7 @@ function popBalloon(balloon) {
   balloon.innerHTML = "";
   balloon.classList.remove("balloon");
   balloon.classList.add("explode-balloon");
-  baloonPoppedCounter++;
+  BalloonPoppedCounter++;
   updatescoredisplay();
 
   setTimeout(() => {
@@ -83,5 +83,5 @@ function popBalloon(balloon) {
 
 
 function updatescoredisplay() {
-  scoredisplay.textContent = `Score: ${baloonPoppedCounter}`;
+  scoredisplay.textContent = `Score: ${BalloonPoppedCounter}`;
 }
