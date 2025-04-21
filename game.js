@@ -1,6 +1,8 @@
 const gameContainer = document.getElementById("gameContainer");
 const stopButton = document.getElementById("stopButton");
 const startButton = document.getElementById("startButton");
+const scoredisplay = document.getElementById("scoredisplay");
+
 // const speedUpButton = document.getElementById("speedUpButton");
 
 stopButton.style.display = "none";
@@ -71,8 +73,15 @@ function popBalloon(balloon) {
   balloon.innerHTML = "";
   balloon.classList.remove("balloon");
   balloon.classList.add("explode-balloon");
+  baloonPoppedCounter++;
+  updatescoredisplay();
 
   setTimeout(() => {
     gameContainer.removeChild(balloon);
   }, 550);
+}
+
+
+function updatescoredisplay() {
+  scoredisplay.textContent = `Score: ${baloonPoppedCounter}`;
 }
