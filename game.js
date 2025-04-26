@@ -1,7 +1,7 @@
 // Refactored game.js with Dynamic Spawn Speed
 
 const GAME_SETTINGS = {
-  maxMissedBalloons: 10,
+  maxMissedBalloons: 25,
   balloonSpeedRange: [1, 2.5],
   columns: 4,
   popAnimationDuration: 550,
@@ -50,13 +50,13 @@ function updateScoreDisplay() {
 }
 
 function getSpawnInterval() {
-  if (balloonPoppedCounter >= 40) {
+  if (balloonPoppedCounter >= 100) {
     return 200; // Very fast spawning
-  } else if (balloonPoppedCounter >= 25) {
+  } else if (balloonPoppedCounter >= 65) {
     return 300; // Faster spawning
-  } else if (balloonPoppedCounter >= 15) {
+  } else if (balloonPoppedCounter >= 25) {
     return 400; // Fast spawning (existing)
-  } else if (balloonPoppedCounter >= 10) {
+  } else if (balloonPoppedCounter >= 15) {
     return 500; // Moderately fast spawning
   } else if (balloonPoppedCounter >= 5) {
     return 600; // Slower spawning (existing)
