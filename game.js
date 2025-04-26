@@ -1,7 +1,7 @@
-// game engine
+// Refactored game.js with Dynamic Spawn Speed
 
 const GAME_SETTINGS = {
-  maxMissedBalloons: 25,
+  maxMissedBalloons: 10,
   balloonSpeedRange: [1, 2.5],
   columns: 4,
   popAnimationDuration: 550,
@@ -14,7 +14,7 @@ const scoreDisplay = document.createElement("div");
 
 let balloonPoppedCounter = 0;
 let missedBalloonsCounter = 0;
-let gameLoopInterval;
+let gameLoopTimeout;
 
 stopButton.style.display = "none";
 scoreDisplay.id = "scoreDisplay";
@@ -25,6 +25,24 @@ document.getElementById("gamescore").appendChild(scoreDisplay);
 
 function updateScoreDisplay() {
   scoreDisplay.textContent = `Hit: ${balloonPoppedCounter} | Missed: ${missedBalloonsCounter}`;
+
+  const gamescore = document.getElementById("gamescore");
+
+  if (missedBalloonsCounter >= 5) {
+    gamescore.classList.add("warning");
+  } else {
+    gamescore.classList.remove("warning");
+  }
+}
+
+function getSpawnInterval() {
+  if (balloonPoppedCounter >= 15) {
+    return 400;
+  } else if (balloonPoppedCounter >= 5) {
+    return 600;
+  } else {
+    return 1000;
+  }
 }
 
 function toggleButtons(startVisible) {
@@ -38,15 +56,20 @@ function startGame() {
   missedBalloonsCounter = 0;
   updateScoreDisplay();
   toggleButtons(false);
+  spawnBalloonLoop();
+}
 
-  gameLoopInterval = setInterval(() => {
-    createBalloon();
-  }, 1000);
+function spawnBalloonLoop() {
+  createBalloon();
+  const nextSpawnTime = getSpawnInterval();
+  gameLoopTimeout = setTimeout(spawnBalloonLoop, nextSpawnTime);
 }
 
 function endGame() {
-  clearInterval(gameLoopInterval);
+  clearTimeout(gameLoopTimeout);
   clearGame();
+  const gamescore = document.getElementById("gamescore");
+  gamescore.classList.remove("warning");
   showGameOverModal();
   toggleButtons(true);
 }
@@ -84,14 +107,18 @@ function createBalloon() {
 function animateBalloon(balloon) {
   let y = 0;
   const maxY = gameContainer.offsetHeight;
+  const balloonHeight = parseInt(getComputedStyle(balloon).height);
+
   const speed = randomBetween(...GAME_SETTINGS.balloonSpeedRange);
 
   function move() {
     y += speed;
-    if (y < maxY) {
-      balloon.style.bottom = `${y}px`;
-      requestAnimationFrame(move);
-    } else {
+    balloon.style.bottom = `${y}px`;
+
+    const balloonTop = y + balloonHeight;
+    const gameContainerHeight = gameContainer.offsetHeight;
+
+    if (balloonTop >= gameContainerHeight) {
       if (gameContainer.contains(balloon)) {
         balloon.remove();
         missedBalloonsCounter++;
@@ -100,6 +127,8 @@ function animateBalloon(balloon) {
           endGame();
         }
       }
+    } else {
+      requestAnimationFrame(move);
     }
   }
 
@@ -111,6 +140,10 @@ function handleBalloonPop(balloon) {
   balloonPoppedCounter++;
   updateScoreDisplay();
   console.log(`You have popped ${balloonPoppedCounter} balloons`);
+  if (balloonPoppedCounter === 5 || balloonPoppedCounter === 15) {
+    showLevelUpMessage();
+    console.log(`Level upgraded`);
+  }
 }
 
 function animatePop(balloon) {
@@ -127,6 +160,19 @@ function animatePop(balloon) {
 function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
+
+
+function showLevelUpMessage() {
+  const levelUpMessage = document.getElementById("levelUpMessage");
+  levelUpMessage.style.display = "block";
+  
+  setTimeout(() => {
+    levelUpMessage.style.display = "none";
+  }, 1000); // Hide after 1 second
+}
+
+
+
 
 // Event Listeners
 startButton.addEventListener("click", startGame);
