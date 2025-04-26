@@ -7,6 +7,12 @@ const GAME_SETTINGS = {
   popAnimationDuration: 550,
 };
 
+let sirenSound; 
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  sirenSound = document.getElementById("sirenSound");
+});
+
 const gameContainer = document.getElementById("gameContainer");
 const stopButton = document.getElementById("stopButton");
 const startButton = document.getElementById("startButton");
@@ -30,8 +36,16 @@ function updateScoreDisplay() {
 
   if (missedBalloonsCounter >= 5) {
     gamescore.classList.add("warning");
+    if (sirenSound.paused) {
+      sirenSound.loop = true; // keep looping while flashing
+      sirenSound.play();
+    }
   } else {
     gamescore.classList.remove("warning");
+        if (!sirenSound.paused) {
+      sirenSound.pause();
+      sirenSound.currentTime = 0;
+    }
   }
 }
 
@@ -66,6 +80,10 @@ function spawnBalloonLoop() {
 }
 
 function endGame() {
+  if (!sirenSound.paused) {
+    sirenSound.pause();
+    sirenSound.currentTime = 0;
+  }
   clearTimeout(gameLoopTimeout);
   clearGame();
   const gamescore = document.getElementById("gamescore");
