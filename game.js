@@ -7,9 +7,9 @@ const GAME_SETTINGS = {
   popAnimationDuration: 550,
 };
 
-let sirenSound; 
+let sirenSound;
 
-document.addEventListener('DOMContentLoaded', (event) => {
+document.addEventListener("DOMContentLoaded", (event) => {
   sirenSound = document.getElementById("sirenSound");
 });
 
@@ -42,7 +42,7 @@ function updateScoreDisplay() {
     }
   } else {
     gamescore.classList.remove("warning");
-        if (!sirenSound.paused) {
+    if (!sirenSound.paused) {
       sirenSound.pause();
       sirenSound.currentTime = 0;
     }
@@ -50,12 +50,18 @@ function updateScoreDisplay() {
 }
 
 function getSpawnInterval() {
-  if (balloonPoppedCounter >= 15) {
-    return 400;
+  if (balloonPoppedCounter >= 40) {
+    return 200; // Very fast spawning
+  } else if (balloonPoppedCounter >= 25) {
+    return 300; // Faster spawning
+  } else if (balloonPoppedCounter >= 15) {
+    return 400; // Fast spawning (existing)
+  } else if (balloonPoppedCounter >= 10) {
+    return 500; // Moderately fast spawning
   } else if (balloonPoppedCounter >= 5) {
-    return 600;
+    return 600; // Slower spawning (existing)
   } else {
-    return 1000;
+    return 1000; // Default slowest spawning (for balloonPoppedCounter < 5)
   }
 }
 
@@ -179,18 +185,14 @@ function randomBetween(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-
 function showLevelUpMessage() {
   const levelUpMessage = document.getElementById("levelUpMessage");
   levelUpMessage.style.display = "block";
-  
+
   setTimeout(() => {
     levelUpMessage.style.display = "none";
   }, 1000); // Hide after 1 second
 }
-
-
-
 
 // Event Listeners
 startButton.addEventListener("click", startGame);
