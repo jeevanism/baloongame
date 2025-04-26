@@ -1,7 +1,7 @@
-// Refactored game.js with improvements: Config object, better clean-up, game states, smoother scaling
+// game engine
 
 const GAME_SETTINGS = {
-  maxBalloons: 100,
+  maxMissedBalloons: 25,
   balloonSpeedRange: [1, 2.5],
   columns: 4,
   popAnimationDuration: 550,
@@ -13,6 +13,7 @@ const startButton = document.getElementById("startButton");
 const scoreDisplay = document.createElement("div");
 
 let balloonPoppedCounter = 0;
+let missedBalloonsCounter = 0;
 let gameLoopInterval;
 
 stopButton.style.display = "none";
@@ -23,7 +24,7 @@ scoreDisplay.style.marginTop = "10px";
 document.getElementById("gamescore").appendChild(scoreDisplay);
 
 function updateScoreDisplay() {
-  scoreDisplay.textContent = `Score: ${balloonPoppedCounter}`;
+  scoreDisplay.textContent = `Hit: ${balloonPoppedCounter} | Missed: ${missedBalloonsCounter}`;
 }
 
 function toggleButtons(startVisible) {
@@ -34,24 +35,33 @@ function toggleButtons(startVisible) {
 function startGame() {
   clearGame();
   balloonPoppedCounter = 0;
+  missedBalloonsCounter = 0;
   updateScoreDisplay();
   toggleButtons(false);
 
   gameLoopInterval = setInterval(() => {
-    if (balloonPoppedCounter < GAME_SETTINGS.maxBalloons) {
-      createBalloon();
-    } else {
-      endGame();
-    }
+    createBalloon();
   }, 1000);
 }
 
 function endGame() {
   clearInterval(gameLoopInterval);
   clearGame();
-  gameContainer.innerHTML = `Game Over - you popped ${balloonPoppedCounter} balloons!`;
+  showGameOverModal();
   toggleButtons(true);
 }
+
+function showGameOverModal() {
+  const modal = document.getElementById("gameOverModal");
+  const finalScore = document.getElementById("finalScore");
+  finalScore.textContent = `You popped ${balloonPoppedCounter} balloons!`;
+  modal.style.display = "block";
+}
+
+const closeModalButton = document.getElementById("closeModalButton");
+closeModalButton.addEventListener("click", () => {
+  document.getElementById("gameOverModal").style.display = "none";
+});
 
 function clearGame() {
   gameContainer.innerHTML = "";
@@ -82,7 +92,14 @@ function animateBalloon(balloon) {
       balloon.style.bottom = `${y}px`;
       requestAnimationFrame(move);
     } else {
-      balloon.remove();
+      if (gameContainer.contains(balloon)) {
+        balloon.remove();
+        missedBalloonsCounter++;
+        updateScoreDisplay();
+        if (missedBalloonsCounter >= GAME_SETTINGS.maxMissedBalloons) {
+          endGame();
+        }
+      }
     }
   }
 

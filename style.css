@@ -1,6 +1,6 @@
 /*
 * A simple balloon popup game 
-* 2023 - Jeevanism.com 
+* Updated 2024 - Jeevanism.com 
 */
 
 :root {
@@ -10,9 +10,10 @@
   --explode-balloon-image-mobile: url('explode-mobile.gif');
 }
 
-body{
+body {
   height: 100vh;
-  background-color: #c8ae5b;
+  background: linear-gradient(to top, #87CEEB, #B0E0E6); /* Sky blue gradient */
+  margin: 0;
 }
 
 #gameContainer {
@@ -24,24 +25,48 @@ body{
   margin-top: 2rem;
 }
 
-
 #gamescore {
-  display: block;
-  padding:10px;
-  background-color:#171717;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #171717;
+  color: white;
+  gap: 30px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-bottom: 2px solid white;
 }
 
-#scoredisplay{
- color: white;
+#scoreDisplay {
+  color: #00ffe1;
+  padding: 6px 12px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 2px solid #00ffe1;
+  border-radius: 10px;
+  font-size: 1.2rem;
 }
 
 #startButton,
 #stopButton {
   display: block;
   margin: 0 auto;
-  padding: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: white;
+  color: #171717;
+  border: 2px solid #00bfff;
+  border-radius: 8px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
+#startButton:hover,
+#stopButton:hover {
+  background-color: #00bfff;
+  color: white;
+  transform: scale(1.05);
+}
 
 #speedUpButton {
   display: block;
@@ -49,33 +74,31 @@ body{
   margin: 20px;
 }
 
+/* Balloon floating animation */
 @keyframes balloonUp {
   0% {
     transform: translateY(0);
   }
-
   100% {
     transform: translateY(-100vh);
   }
 }
 
+/* Balloon exploding animation */
 @keyframes balloonExplode {
   0% {
     transform: scale(1);
     opacity: 1;
   }
-
   100% {
     transform: scale(2);
     opacity: 0;
   }
 }
 
-
 .balloon.explode {
   animation: balloonExplode 0.5s forwards;
 }
-
 
 .balloon {
   width: var(--balloon-width);
@@ -85,6 +108,8 @@ body{
   bottom: 0;
   animation: balloonUp 10s linear forwards;
   background-image: url("balloon.png");
+  background-size: contain;
+  background-repeat: no-repeat;
   object-fit: cover;
   border-radius: 50%;
 }
@@ -100,6 +125,7 @@ body{
   animation: balloonExplode 0.5s forwards;
 }
 
+/* Mobile adjustments */
 @media screen and (max-width: 480px) {
   .balloon {
     width: 75px;
@@ -110,4 +136,55 @@ body{
   .explode-balloon {
     background-image: var(--explode-balloon-image-mobile);
   }
+}
+
+
+/* Modal styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7); /* Dimmed background */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 30px;
+  border: 2px solid #00bfff;
+  border-radius: 15px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0px 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #171717;
+}
+
+#finalScore {
+  font-size: 1.2rem;
+  color: #00bfff;
+  margin-bottom: 20px;
+}
+
+#closeModalButton {
+  background-color: #00bfff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#closeModalButton:hover {
+  background-color: #009acd;
 }
