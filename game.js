@@ -1,14 +1,21 @@
+// Refactored game.js with improvements: Config object, better clean-up, game states, smoother scaling
+
+const GAME_SETTINGS = {
+  maxBalloons: 100,
+  balloonSpeedRange: [1, 2.5],
+  columns: 4,
+  popAnimationDuration: 550,
+};
+
 const gameContainer = document.getElementById("gameContainer");
 const stopButton = document.getElementById("stopButton");
 const startButton = document.getElementById("startButton");
-
-stopButton.style.display = "none";
+const scoreDisplay = document.createElement("div");
 
 let balloonPoppedCounter = 0;
-let balloonInterval = 1000;
 let gameLoopInterval;
 
-const scoreDisplay = document.createElement("div");
+stopButton.style.display = "none";
 scoreDisplay.id = "scoreDisplay";
 scoreDisplay.style.color = "white";
 scoreDisplay.style.textAlign = "center";
@@ -19,49 +26,46 @@ function updateScoreDisplay() {
   scoreDisplay.textContent = `Score: ${balloonPoppedCounter}`;
 }
 
-startButton.addEventListener("click", startGame);
-stopButton.addEventListener("click", stopGame);
-
-function startGame() {
-  gameContainer.innerHTML = '';
-  startButton.style.display = "none";
-  stopButton.style.display = "block";
-  balloonPoppedCounter = 0;
-  updateScoreDisplay();
-
-  gameLoopInterval = setInterval(() => {
-    if (balloonPoppedCounter < 100) {
-      createBalloon();
-    } else {
-      stopGame();
-    }
-  }, balloonInterval);
+function toggleButtons(startVisible) {
+  startButton.style.display = startVisible ? "block" : "none";
+  stopButton.style.display = startVisible ? "none" : "block";
 }
 
-function stopGame() {
-  startButton.style.display = "block";
-  stopButton.style.display = "none";
-  clearInterval(gameLoopInterval);
-  gameContainer.innerHTML = `Game Over - you popped ${balloonPoppedCounter} balloons!`;
+function startGame() {
+  clearGame();
   balloonPoppedCounter = 0;
   updateScoreDisplay();
+  toggleButtons(false);
+
+  gameLoopInterval = setInterval(() => {
+    if (balloonPoppedCounter < GAME_SETTINGS.maxBalloons) {
+      createBalloon();
+    } else {
+      endGame();
+    }
+  }, 1000);
+}
+
+function endGame() {
+  clearInterval(gameLoopInterval);
+  clearGame();
+  gameContainer.innerHTML = `Game Over - you popped ${balloonPoppedCounter} balloons!`;
+  toggleButtons(true);
+}
+
+function clearGame() {
+  gameContainer.innerHTML = "";
 }
 
 function createBalloon() {
   const balloon = document.createElement("div");
   balloon.className = "balloon";
 
-  balloon.addEventListener("click", () => {
-    popBalloon(balloon);
-    balloonPoppedCounter++;
-    updateScoreDisplay();
-    console.log('You have popped ' + balloonPoppedCounter);
-  });
+  balloon.addEventListener("click", () => handleBalloonPop(balloon));
 
-  const column = Math.floor(Math.random() * 4);
-  const leftPosition = (column / 4) * 100 + "%";
-  balloon.style.left = leftPosition;
-  balloon.style.bottom = "0px"; // Start from the bottom
+  const column = Math.floor(Math.random() * GAME_SETTINGS.columns);
+  balloon.style.left = `${(column / GAME_SETTINGS.columns) * 100}%`;
+  balloon.style.bottom = "0px";
 
   gameContainer.appendChild(balloon);
   animateBalloon(balloon);
@@ -70,32 +74,43 @@ function createBalloon() {
 function animateBalloon(balloon) {
   let y = 0;
   const maxY = gameContainer.offsetHeight;
-  const speed = 1 + Math.random() * 1.5;
+  const speed = randomBetween(...GAME_SETTINGS.balloonSpeedRange);
 
   function move() {
     y += speed;
     if (y < maxY) {
-      balloon.style.bottom = y + "px";
+      balloon.style.bottom = `${y}px`;
       requestAnimationFrame(move);
     } else {
-      if (gameContainer.contains(balloon)) {
-        gameContainer.removeChild(balloon);
-      }
+      balloon.remove();
     }
   }
 
   requestAnimationFrame(move);
 }
 
-function popBalloon(balloon) {
+function handleBalloonPop(balloon) {
+  animatePop(balloon);
+  balloonPoppedCounter++;
+  updateScoreDisplay();
+  console.log(`You have popped ${balloonPoppedCounter} balloons`);
+}
+
+function animatePop(balloon) {
   balloon.style.animation = "none";
-  balloon.innerHTML = "";
   balloon.classList.remove("balloon");
   balloon.classList.add("explode-balloon");
+  balloon.innerHTML = "";
 
   setTimeout(() => {
-    if (gameContainer.contains(balloon)) {
-      gameContainer.removeChild(balloon);
-    }
-  }, 550);
+    balloon.remove();
+  }, GAME_SETTINGS.popAnimationDuration);
 }
+
+function randomBetween(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+// Event Listeners
+startButton.addEventListener("click", startGame);
+stopButton.addEventListener("click", endGame);
