@@ -8,9 +8,11 @@ const GAME_SETTINGS = {
 };
 
 let sirenSound;
+let popSound;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   sirenSound = document.getElementById("sirenSound");
+  popSound = document.getElementById("popSound");
 });
 
 const gameContainer = document.getElementById("gameContainer");
@@ -161,6 +163,12 @@ function animateBalloon(balloon) {
 
 function handleBalloonPop(balloon) {
   animatePop(balloon);
+
+  if (popSound.paused) {
+    popSound.loop =false; 
+    popSound.play();
+  }
+
   balloonPoppedCounter++;
   updateScoreDisplay();
   console.log(`You have popped ${balloonPoppedCounter} balloons`);
