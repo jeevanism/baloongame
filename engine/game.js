@@ -166,6 +166,9 @@ function handleBalloonPop(balloon) {
 
   if (popSound.paused) {
     popSound.loop =false; 
+    if (navigator.vibrate) {
+      navigator.vibrate(200);
+    }
     popSound.play();
   }
 
