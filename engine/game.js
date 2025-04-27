@@ -165,10 +165,19 @@ function handleBalloonPop(balloon) {
   animatePop(balloon);
 
   if (popSound.paused) {
-    popSound.loop =false; 
+    popSound.loop = false;
     popSound.play();
   }
-  navigator.vibrate(200);
+  if ("vibrate" in navigator) {
+    const didVibrate = navigator.vibrate(200);
+    console.log("Vibration API supported, vibrate() returned →", didVibrate);
+    if (!didVibrate) {
+      console.warn("vibrate() was called but the pattern was rejected");
+    }
+  } else {
+    console.log("Vibration API not supported on this device/browser");
+  }
+
   balloonPoppedCounter++;
   updateScoreDisplay();
   console.log(`You have popped ${balloonPoppedCounter} balloons`);
