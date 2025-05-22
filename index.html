@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pop-Up Party: The Ultimate Balloon Blast!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-info">
+            <div id="score">Score: 0</div>
+            <div id="lives">Lives: 3</div>
+            <div id="high-score">High Score: 0</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="game-overlay active">
+            <h1>Pop-Up Party!</h1>
+            <p>Click or tap balloons to pop them!</p>
+            <p>Don't let them reach the top!</p>
+            <ul>
+                <li><strong>Red Balloon:</strong> Standard points.</li>
+                <li><strong>Blue Balloon:</strong> Armored! Needs multiple hits.</li>
+                <li><strong>Dark Grey Balloon:</strong> BOMB! Pops nearby balloons, but lose points if you hit it!</li>
+                <li><strong>Gold Balloon:</strong> Multiplier! Activates 2x points for a short time.</li>
+            </ul>
+            <button id="start-button">Start Game</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="game-overlay">
+            <h1>Game Over!</h1>
+            <p id="final-score"></p>
+            <button id="restart-button">Play Again</button>
+        </div>
+    </div>
+
+    <!-- Background Music (Optional, but good for ambience) -->
+    <!-- <audio id="bg-music" src="sounds/background_music.mp3" loop></audio> -->
+
+    <script src="script.js"></script>
+</body>
+</html>

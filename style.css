@@ -1,0 +1,266 @@
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent scrolling */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to bottom, #87CEEB, #ffffff); /* Sky blue to white */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="%23333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-crosshair"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="2" y2="12"></line><line x1="12" y1="22" x2="12" y2="2"></line></svg>') 15 15, crosshair; /* Custom crosshair cursor */
+}
+
+#game-container {
+    position: relative;
+    width: 100%;
+    max-width: 98%; /* Standard game width */
+    height: 99vh; /* Adjust height relative to viewport */
+    max-height: 99vh; /* Max height for larger screens */
+    border: 5px solid #333;
+    background-color: rgba(255, 255, 255, 0.7); /* Slightly transparent background */
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    touch-action: none; /* Prevent browser touch actions like zoom */
+}
+
+/* Game Info Bar */
+#game-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    font-size: 1.2em;
+    z-index: 100;
+}
+
+/* Balloons */
+.balloon {
+    position: absolute;
+    width: 50px;
+    height: 60px;
+    border-radius: 50%;
+    /* Default styling */
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out; /* For hit feedback on armored */
+    cursor: pointer;
+    filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.3)); /* Adds a subtle shadow */
+}
+
+.balloon::after { /* Balloon string/tail */
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Specific Balloon Styles */
+.balloon.standard {
+    background-color: #ff6b6b; /* Red */
+}
+
+.balloon.armored {
+    background-color: #6b6bff; /* Blue */
+    border: 3px solid #000;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.7);
+}
+
+.balloon.bomb {
+    background-color: #333333; /* Dark Grey */
+    border: 2px dashed #ff0000; /* Red dashed border */
+    font-size: 0.8em;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+.balloon.bomb::before {
+    content: '!'; /* Exclamation mark */
+    font-size: 2em;
+}
+
+.balloon.multiplier {
+    background-color: #ffc107; /* Gold */
+    border: 3px solid #ffd700; /* Brighter gold border */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); /* Glow effect */
+}
+.balloon.multiplier::before {
+    content: 'x2'; /* Multiplier text */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+
+/* Pop Animation */
+.balloon.popped {
+    transform: scale(0) rotate(720deg); /* Shrink and spin */
+    opacity: 0;
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in; /* Faster transition for pop */
+}
+
+/* Game Over and Start Screens */
+.game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.game-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.game-overlay h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+    color: #ffdd00; /* Goldish for titles */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+}
+
+.game-overlay p {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+.game-overlay ul {
+    list-style: none;
+    padding: 0;
+    font-size: 1.1em;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    color: #ddd;
+}
+.game-overlay ul li {
+    margin-bottom: 5px;
+}
+.game-overlay ul li strong {
+    color: #fff;
+}
+
+.game-overlay button {
+    padding: 15px 30px;
+    font-size: 1.8em;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.game-overlay button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+.game-overlay button:active {
+    transform: translateY(0);
+}
+
+/* Game Over visual effect */
+#game-container.game-over {
+    filter: grayscale(0.5); /* Desaturate slightly */
+    animation: shake 0.5s; /* Small shake effect */
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+/* Combo Feedback */
+.combo-feedback, .multiplier-message {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #4CAF50; /* Green */
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 2.5em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    z-index: 150;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.combo-feedback.show, .multiplier-message.show {
+    opacity: 1;
+    transform: scale(1);
+}
+.combo-feedback.hide, .multiplier-message.hide {
+    opacity: 0;
+    transform: scale(1.5) translateY(-50px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.multiplier-message {
+    color: #ffc107; /* Gold */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #game-container {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+    .balloon {
+        width: 60px; /* Slightly larger for touch */
+        height: 70px;
+    }
+    .game-overlay h1 {
+        font-size: 2.5em;
+    }
+    .game-overlay p, .game-overlay ul {
+        font-size: 1.1em;
+    }
+    .game-overlay button {
+        font-size: 1.5em;
+        padding: 12px 25px;
+    }
+    .combo-feedback, .multiplier-message {
+        font-size: 2em;
+    }
+    body {
+        cursor: pointer; /* Reset cursor for mobile */
+    }
+}
