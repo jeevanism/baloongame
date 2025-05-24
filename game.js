@@ -47,49 +47,91 @@ const BALLOON_TYPES = [
 ];
 
 // Level configurations
-const LEVELS = [
-  {
-    minSpawnInterval: 1800,
-    maxSpawnInterval: 2200, // Time between balloon spawns
-    baseSpeed: 10, // Base animation duration in seconds (higher = slower)
-    scoreThreshold: 100, // Score needed to advance to next level
-    patternChance: 0.1, // 10% chance for a patterned balloon
-    maxMissedBalloons: 5, // Max balloons allowed to be missed in this level
-  },
-  {
-    minSpawnInterval: 1400,
-    maxSpawnInterval: 1800,
-    baseSpeed: 9,
-    scoreThreshold: 250,
-    patternChance: 0.2,
-    maxMissedBalloons: 7,
-  },
-  {
-    minSpawnInterval: 1000,
-    maxSpawnInterval: 1400,
-    baseSpeed: 8,
-    scoreThreshold: 500,
-    patternChance: 0.3,
-    maxMissedBalloons: 8,
-  },
-  {
-    minSpawnInterval: 800,
-    maxSpawnInterval: 1200,
-    baseSpeed: 7,
-    scoreThreshold: 800,
-    patternChance: 0.4,
-    maxMissedBalloons: 9,
-  },
-  {
-    minSpawnInterval: 600,
-    maxSpawnInterval: 1000,
-    baseSpeed: 6,
-    scoreThreshold: 1200,
-    patternChance: 0.5,
-    maxMissedBalloons: 10,
-  },
-  // Add more levels here as desired
-];
+// const LEVELS = [
+//   {
+//     minSpawnInterval: 1800,
+//     maxSpawnInterval: 2200, // Time between balloon spawns
+//     baseSpeed: 10, // Base animation duration in seconds (higher = slower)
+//     scoreThreshold: 100, // Score needed to advance to next level
+//     patternChance: 0.1, // 10% chance for a patterned balloon
+//     maxMissedBalloons: 5, // Max balloons allowed to be missed in this level
+//   },
+//   {
+//     minSpawnInterval: 1400,
+//     maxSpawnInterval: 1800,
+//     baseSpeed: 9,
+//     scoreThreshold: 250,
+//     patternChance: 0.2,
+//     maxMissedBalloons: 7,
+//   },
+//   {
+//     minSpawnInterval: 1000,
+//     maxSpawnInterval: 1400,
+//     baseSpeed: 8,
+//     scoreThreshold: 500,
+//     patternChance: 0.3,
+//     maxMissedBalloons: 8,
+//   },
+//   {
+//     minSpawnInterval: 800,
+//     maxSpawnInterval: 1200,
+//     baseSpeed: 7,
+//     scoreThreshold: 800,
+//     patternChance: 0.4,
+//     maxMissedBalloons: 9,
+//   },
+//   {
+//     minSpawnInterval: 600,
+//     maxSpawnInterval: 1000,
+//     baseSpeed: 6,
+//     scoreThreshold: 1200,
+//     patternChance: 0.5,
+//     maxMissedBalloons: 10,
+//   },
+//   // Add more levels here as desired
+// ];
+const TOTAL_GAME_LEVELS = 50;
+let LEVELS = [];
+
+const BASE_MIN_SPAWN_INTERVAL = 2200; // Slower spawn
+const BASE_MAX_SPAWN_INTERVAL = 1800;
+const BASE_SPEED = 10; // Slower speed
+const BASE_SCORE_THRESHOLD = 100;
+const BASE_PATTERN_CHANCE = 0.05; // Less erratic
+const BASE_MAX_MISSED_BALLOONS = 8; // More forgiving
+
+for (let i = 0; i < TOTAL_GAME_LEVELS; i++) {
+  const levelNumber = i + 1; // 1-indexed level for calculations
+
+  // Complexity increases:
+  // Spawning faster
+  let minSpawn = Math.max(400, BASE_MIN_SPAWN_INTERVAL - levelNumber * 20); // Decreases by 20ms per level, min 400ms
+  let maxSpawn = Math.max(600, BASE_MAX_SPAWN_INTERVAL - levelNumber * 20);
+
+  // Balloons move faster (smaller duration value = faster animation)
+  let speed = Math.max(2, BASE_SPEED - levelNumber * 0.15); // Decreases by 0.15s per level, min 2s
+
+  // Higher score required
+  let scoreReq = BASE_SCORE_THRESHOLD + levelNumber * 150; // Increases by 150 points per level
+
+  // More patterned movements (higher chance)
+  let pattern = Math.min(0.8, BASE_PATTERN_CHANCE + levelNumber * 0.015); // Increases by 1.5% per level, max 80%
+
+  // Fewer missed balloons allowed (harder to miss)
+  let maxMissed = Math.max(
+    3,
+    BASE_MAX_MISSED_BALLOONS - Math.floor(levelNumber / 4)
+  ); // Decreases by 1 every 4 levels, min 3
+
+  LEVELS.push({
+    minSpawnInterval: minSpawn,
+    maxSpawnInterval: maxSpawn,
+    baseSpeed: speed,
+    scoreThreshold: scoreReq,
+    patternChance: pattern,
+    maxMissedBalloons: maxMissed,
+  });
+}
 
 // --- Game State Variables ---
 let score = 0;
@@ -328,7 +370,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     balloonEl.style.animation = `${animationName} ${animationDuration}s linear forwards`;
-    balloonEl.style.left = `${getRandomInt(5, 95)}%`; // Random horizontal position
+
+    let balloonWidthPx;
+    if (window.innerWidth <= 480) {
+      balloonWidthPx = 50;
+    } else if (window.innerWidth <= 768) {
+      balloonWidthPx = 60;
+    } else {
+      balloonWidthPx = 80;
+    }
+
+    const gameAreaWidthPx = gameArea.clientWidth;
+    const horizontalPaddingPx = 10;
+
+    const minLeftPx = horizontalPaddingPx;
+    const maxLeftPx = gameAreaWidthPx - balloonWidthPx - horizontalPaddingPx;
+
+    // Prevent negative maxLeftPx (if the game area is very narrow)
+    const safeMaxLeftPx = Math.max(minLeftPx, maxLeftPx);
+
+    // Random left in pixels (clamped safely)
+    const randomLeftPx = getRandomInt(minLeftPx, safeMaxLeftPx);
+
+    balloonEl.style.left = `${randomLeftPx}px`;
 
     // Add event listeners
     balloonEl.addEventListener("click", popBalloon);
@@ -395,12 +459,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "congrats",
         `x${scoreMultiplier} COMBO! +${pointsEarned} points!`
       );
-      playSound("boost.mp3");
+      playSound("boost");
     } else if (balloonType.type === "negative") {
       playSound("error");
       showGameMessage("warning", "Oh no! Disaster!");
     } else if (balloonType.type === "super") {
-        playSound("boost.mp3");
+      playSound("boost");
       showGameMessage("congrats", "Super Pop!");
     }
 

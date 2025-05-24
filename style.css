@@ -7,8 +7,10 @@
 }
 
 body {
-    overflow: hidden; /* Prevent scrolling */
-    background-color: #87CEEB; /* Sky blue background */
+    overflow: hidden;
+    /* Prevent scrolling */
+    background-color: #87CEEB;
+    /* Sky blue background */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -18,13 +20,17 @@ body {
 
 /* Game Area */
 #game-area {
-    position: absolute;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 90%;
     height: 100%;
-    background: linear-gradient(to bottom, #87CEEB, #AEC6CF); /* Fading sky */
-    overflow: hidden; /* Keep balloons within bounds */
+    background: linear-gradient(to bottom, #87CEEB, #AEC6CF);
+    /* Fading sky */
+    overflow: hidden;
+    /* Keep balloons within bounds */
     /* --- CUSTOM CURSOR ADDED HERE --- */
     /* SVG for a simple target/crosshair: a circle with a cross and a central dot. */
     /* The 16 16 are the hotspot coordinates (x y) relative to the top-left of the 32x32 cursor image. */
@@ -34,10 +40,9 @@ body {
 
 /* Animated Clouds Background */
 .cloud {
-    position: absolute;
     background: white;
     border-radius: 50%;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     opacity: 0.8;
 }
 
@@ -56,12 +61,14 @@ body {
     left: -20%;
     animation: drift 60s linear infinite;
 }
+
 .cloud-1::before {
     width: 80px;
     height: 80px;
     top: -30px;
     left: 40px;
 }
+
 .cloud-1::after {
     width: 100px;
     height: 60px;
@@ -76,12 +83,14 @@ body {
     left: -30%;
     animation: drift 80s linear infinite reverse;
 }
+
 .cloud-2::before {
     width: 100px;
     height: 100px;
     top: -40px;
     left: 50px;
 }
+
 .cloud-2::after {
     width: 130px;
     height: 80px;
@@ -96,12 +105,14 @@ body {
     left: -10%;
     animation: drift 70s linear infinite;
 }
+
 .cloud-3::before {
     width: 70px;
     height: 70px;
     top: -25px;
     left: 30px;
 }
+
 .cloud-3::after {
     width: 90px;
     height: 50px;
@@ -110,8 +121,15 @@ body {
 }
 
 @keyframes drift {
-    0% { transform: translateX(-10%); }
-    100% { transform: translateX(120vw); } /* Move across screen */
+    0% {
+        transform: translateX(-10%);
+    }
+
+    100% {
+        transform: translateX(120vw);
+    }
+
+    /* Move across screen */
 }
 
 /* Game Info (Score & Level) */
@@ -125,7 +143,8 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    z-index: 100; /* Ensure it's above balloons */
+    z-index: 100;
+    /* Ensure it's above balloons */
 }
 
 .info-box {
@@ -146,13 +165,15 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
-    pointer-events: none; /* Allows clicks to pass through */
+    pointer-events: none;
+    /* Allows clicks to pass through */
     z-index: 101;
 }
 
 .game-message {
     opacity: 0;
-    animation: fade-out 2s forwards; /* Animation for messages */
+    animation: fade-out 2s forwards;
+    /* Animation for messages */
     animation-delay: 0.5s;
     position: absolute;
     top: 0;
@@ -162,17 +183,30 @@ body {
 }
 
 .game-message.congrats {
-    color: #6eff6e; /* Greenish for congrats */
+    color: #6eff6e;
+    /* Greenish for congrats */
 }
 
 .game-message.warning {
-    color: #ff6e6e; /* Reddish for warnings */
+    color: #ff6e6e;
+    /* Reddish for warnings */
 }
 
 @keyframes fade-out {
-    0% { opacity: 1; transform: translate(-50%, 0); }
-    80% { opacity: 1; transform: translate(-50%, -20px); }
-    100% { opacity: 0; transform: translate(-50%, -50px); }
+    0% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -20px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50px);
+    }
 }
 
 /* Modals */
@@ -186,7 +220,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 200; /* Above all game elements */
+    z-index: 200;
+    /* Above all game elements */
     backdrop-filter: blur(8px);
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
@@ -194,7 +229,8 @@ body {
 
 .modal.hidden {
     opacity: 0;
-    pointer-events: none; /* Disable interaction when hidden */
+    pointer-events: none;
+    /* Disable interaction when hidden */
 }
 
 .modal-content {
@@ -205,7 +241,8 @@ body {
     text-align: center;
     max-width: 80%;
     width: 90%;
-    animation: scale-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy scale-in */
+    animation: scale-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy scale-in */
 }
 
 .modal-content h2 {
@@ -225,7 +262,7 @@ body {
     list-style: none;
     padding: 0;
     margin-bottom: 20px;
-    text-align: left;
+    text-align: center;
     font-size: 1.1em;
     color: #666;
 }
@@ -292,6 +329,7 @@ body {
         transform: scale(0.8);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -302,15 +340,24 @@ body {
 .balloon {
     position: absolute;
     width: 80px;
-    height: 95px; /* Slightly taller for balloon shape */
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Elliptical top */
-    background-color: #ff0000; /* Default color */
-    cursor: pointer; /* Keep pointer for individual balloons, overrides game-area for better UX */
-    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3), /* Inner shadow for depth */
-                0 5px 15px rgba(0, 0, 0, 0.3); /* Outer shadow */
-    transition: transform 0.1s ease-out; /* For hover/active */
-    bottom: -100px; /* Start below screen */
-    z-index: 1; /* Below game info/messages */
+    height: 95px;
+    /* Slightly taller for balloon shape */
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    /* Elliptical top */
+    background-color: #ff0000;
+    /* Default color */
+    cursor: pointer;
+    /* Keep pointer for individual balloons, overrides game-area for better UX */
+    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3),
+        /* Inner shadow for depth */
+        0 5px 15px rgba(0, 0, 0, 0.3);
+    /* Outer shadow */
+    transition: transform 0.1s ease-out;
+    /* For hover/active */
+    bottom: -100px;
+    /* Start below screen */
+    z-index: 1;
+    /* Below game info/messages */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -318,21 +365,26 @@ body {
     font-weight: bold;
     color: white;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    user-select: none; /* Prevent text selection */
+    user-select: none;
+    /* Prevent text selection */
 }
 
 /* Balloon string/tail */
 .balloon::after {
     content: '';
     position: absolute;
-    bottom: -15px; /* Position below balloon body */
+    bottom: -15px;
+    /* Position below balloon body */
     left: 50%;
     transform: translateX(-50%);
     width: 2px;
-    height: 20px; /* Length of the string */
+    height: 20px;
+    /* Length of the string */
     background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 0 0 50% 50%; /* Tapered end */
-    z-index: -1; /* Behind the balloon body */
+    border-radius: 0 0 50% 50%;
+    /* Tapered end */
+    z-index: -1;
+    /* Behind the balloon body */
 }
 
 /* Balloon shine effect */
@@ -346,13 +398,15 @@ body {
     border-radius: 50%;
     background: radial-gradient(circle at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%);
     filter: blur(2px);
-    z-index: 2; /* On top of the balloon body */
+    z-index: 2;
+    /* On top of the balloon body */
 }
 
 /* Hover/Active effects for bouncy feel */
 .balloon:hover {
     transform: scale(1.05);
 }
+
 .balloon:active {
     transform: scale(0.95);
 }
@@ -362,95 +416,159 @@ body {
 .balloon.red {
     background: linear-gradient(to bottom right, #ff6b6b, #e00000);
 }
+
 .balloon.blue {
     background: linear-gradient(to bottom right, #6bc1ff, #007bff);
 }
+
 .balloon.green {
     background: linear-gradient(to bottom right, #6eff6b, #00c000);
 }
+
 .balloon.yellow {
     background: linear-gradient(to bottom right, #ffe66b, #ffc107);
 }
+
 .balloon.purple {
     background: linear-gradient(to bottom right, #b46bff, #8a00ff);
 }
+
 .balloon.gold {
     background: linear-gradient(to bottom right, #ffd700, #daa520);
-    box-shadow: inset -5px -5px 10px rgba(255,255,0,0.5),
-                0 5px 20px rgba(255, 215, 0, 0.7);
+    box-shadow: inset -5px -5px 10px rgba(255, 255, 0, 0.5),
+        0 5px 20px rgba(255, 215, 0, 0.7);
     border: 2px solid gold;
 }
+
 .balloon.freeze {
     background: linear-gradient(to bottom right, #a0ffff, #00bfff);
 }
+
 .balloon.combo {
     background: linear-gradient(to bottom right, #ffb6c1, #ff69b4);
 }
 
 /* Negative balloon specific styling */
 .balloon.negative {
-    transform: rotate(15deg); /* Slightly tilted */
+    transform: rotate(15deg);
+    /* Slightly tilted */
     border: 2px solid #a70000;
 }
 
 /* Balloon Movement Animations */
 @keyframes rise {
-    from { transform: translateY(0) translateX(0); }
-    to { transform: translateY(-120vh) translateX(0); }
+    from {
+        transform: translateY(0) translateX(0);
+    }
+
+    to {
+        transform: translateY(-120vh) translateX(0);
+    }
 }
 
 @keyframes rise-slow {
-    from { transform: translateY(0) translateX(0); }
-    to { transform: translateY(-120vh) translateX(0); }
+    from {
+        transform: translateY(0) translateX(0);
+    }
+
+    to {
+        transform: translateY(-120vh) translateX(0);
+    }
 }
 
 @keyframes rise-fast {
-    from { transform: translateY(0) translateX(0); }
-    to { transform: translateY(-120vh) translateX(0); }
+    from {
+        transform: translateY(0) translateX(0);
+    }
+
+    to {
+        transform: translateY(-120vh) translateX(0);
+    }
 }
 
 /* Patterned movements */
 @keyframes zig-zag {
-    0% { transform: translateY(0) translateX(0); }
-    25% { transform: translateY(-30vh) translateX(50px); }
-    50% { transform: translateY(-60vh) translateX(-50px); }
-    75% { transform: translateY(-90vh) translateX(50px); }
-    100% { transform: translateY(-120vh) translateX(0); }
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+
+    25% {
+        transform: translateY(-30vh) translateX(50px);
+    }
+
+    50% {
+        transform: translateY(-60vh) translateX(-50px);
+    }
+
+    75% {
+        transform: translateY(-90vh) translateX(50px);
+    }
+
+    100% {
+        transform: translateY(-120vh) translateX(0);
+    }
 }
 
 @keyframes sway {
-    0% { transform: translateY(0) translateX(0); }
-    25% { transform: translateY(-30vh) translateX(20px); }
-    50% { transform: translateY(-60vh) translateX(-20px); }
-    75% { transform: translateY(-90vh) translateX(20px); }
-    100% { transform: translateY(-120vh) translateX(0); }
+    0% {
+        transform: translateY(0) translateX(0);
+    }
+
+    25% {
+        transform: translateY(-30vh) translateX(20px);
+    }
+
+    50% {
+        transform: translateY(-60vh) translateX(-20px);
+    }
+
+    75% {
+        transform: translateY(-90vh) translateX(20px);
+    }
+
+    100% {
+        transform: translateY(-120vh) translateX(0);
+    }
 }
 
 /* Explosion Effect */
 .balloon.popped {
-    animation: explode 0.3s forwards; /* Animation for explosion */
-    pointer-events: none; /* Disable further clicks */
-    cursor: default; /* Change cursor to default when popped */
+    animation: explode 0.3s forwards;
+    /* Animation for explosion */
+    pointer-events: none;
+    /* Disable further clicks */
+    cursor: default;
+    /* Change cursor to default when popped */
 }
 
 @keyframes explode {
     0% {
         transform: scale(1);
         opacity: 1;
-        filter: hue-rotate(0deg); /* Start hue */
-        box-shadow: inset 0 0 0 rgba(0,0,0,0.3); /* Reset inner shadow */
+        filter: hue-rotate(0deg);
+        /* Start hue */
+        box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.3);
+        /* Reset inner shadow */
     }
+
     50% {
-        transform: scale(1.2) rotate(15deg); /* Grow and rotate */
+        transform: scale(1.2) rotate(15deg);
+        /* Grow and rotate */
         opacity: 0.8;
-        filter: hue-rotate(90deg); /* Change hue for flashy effect */
-        box-shadow: inset 0 0 50px rgba(255,255,255,0.8), /* Inner glow */
-                    0 0 30px rgba(255,255,0,0.8); /* Outer glow */
+        filter: hue-rotate(90deg);
+        /* Change hue for flashy effect */
+        box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.8),
+            /* Inner glow */
+            0 0 30px rgba(255, 255, 0, 0.8);
+        /* Outer glow */
     }
+
     100% {
-        transform: scale(0) rotate(180deg); /* Shrink and disappear */
+        transform: scale(0) rotate(180deg);
+        /* Shrink and disappear */
         opacity: 0;
-        filter: hue-rotate(180deg); /* Further hue change */
+        filter: hue-rotate(180deg);
+        /* Further hue change */
     }
 }
 
@@ -468,12 +586,14 @@ body {
         height: 75px;
         font-size: 1.2em;
     }
+
     .balloon::before {
         width: 15px;
         height: 15px;
         top: 8px;
         left: 10px;
     }
+
     .balloon::after {
         height: 15px;
         bottom: -10px;
@@ -516,12 +636,14 @@ body {
         height: 60px;
         font-size: 1em;
     }
+
     .balloon::before {
         width: 10px;
         height: 10px;
         top: 6px;
         left: 8px;
     }
+
     .balloon::after {
         height: 10px;
         bottom: -8px;
