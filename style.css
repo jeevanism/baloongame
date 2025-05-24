@@ -1,0 +1,554 @@
+/* Basic Reset & Body Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    overflow: hidden; /* Prevent scrolling */
+    background-color: #87CEEB; /* Sky blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Game Area */
+#game-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #87CEEB, #AEC6CF); /* Fading sky */
+    overflow: hidden; /* Keep balloons within bounds */
+    /* --- CUSTOM CURSOR ADDED HERE --- */
+    /* SVG for a simple target/crosshair: a circle with a cross and a central dot. */
+    /* The 16 16 are the hotspot coordinates (x y) relative to the top-left of the 32x32 cursor image. */
+    /* 'crosshair' is the fallback cursor type if the custom SVG fails to load. */
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke="%23333"/><line x1="12" y1="2" x2="12" y2="22" stroke="%23333"/><line x1="2" y1="12" x2="22" y2="12" stroke="%23333"/><circle cx="12" cy="12" r="2" fill="%23fff" stroke="%23333"/></svg>') 12 12, crosshair;
+}
+
+/* Animated Clouds Background */
+.cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    opacity: 0.8;
+}
+
+.cloud::before,
+.cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: inherit;
+}
+
+.cloud-1 {
+    width: 120px;
+    height: 70px;
+    top: 10%;
+    left: -20%;
+    animation: drift 60s linear infinite;
+}
+.cloud-1::before {
+    width: 80px;
+    height: 80px;
+    top: -30px;
+    left: 40px;
+}
+.cloud-1::after {
+    width: 100px;
+    height: 60px;
+    top: -10px;
+    left: 70px;
+}
+
+.cloud-2 {
+    width: 150px;
+    height: 90px;
+    top: 30%;
+    left: -30%;
+    animation: drift 80s linear infinite reverse;
+}
+.cloud-2::before {
+    width: 100px;
+    height: 100px;
+    top: -40px;
+    left: 50px;
+}
+.cloud-2::after {
+    width: 130px;
+    height: 80px;
+    top: -20px;
+    left: 80px;
+}
+
+.cloud-3 {
+    width: 100px;
+    height: 60px;
+    top: 50%;
+    left: -10%;
+    animation: drift 70s linear infinite;
+}
+.cloud-3::before {
+    width: 70px;
+    height: 70px;
+    top: -25px;
+    left: 30px;
+}
+.cloud-3::after {
+    width: 90px;
+    height: 50px;
+    top: -5px;
+    left: 60px;
+}
+
+@keyframes drift {
+    0% { transform: translateX(-10%); }
+    100% { transform: translateX(120vw); } /* Move across screen */
+}
+
+/* Game Info (Score & Level) */
+#game-info {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    gap: 15px;
+    font-size: 1.8em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 100; /* Ensure it's above balloons */
+}
+
+.info-box {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 8px 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+/* Game Messages */
+#game-messages {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+    pointer-events: none; /* Allows clicks to pass through */
+    z-index: 101;
+}
+
+.game-message {
+    opacity: 0;
+    animation: fade-out 2s forwards; /* Animation for messages */
+    animation-delay: 0.5s;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+.game-message.congrats {
+    color: #6eff6e; /* Greenish for congrats */
+}
+
+.game-message.warning {
+    color: #ff6e6e; /* Reddish for warnings */
+}
+
+@keyframes fade-out {
+    0% { opacity: 1; transform: translate(-50%, 0); }
+    80% { opacity: 1; transform: translate(-50%, -20px); }
+    100% { opacity: 0; transform: translate(-50%, -50px); }
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200; /* Above all game elements */
+    backdrop-filter: blur(8px);
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.modal.hidden {
+    opacity: 0;
+    pointer-events: none; /* Disable interaction when hidden */
+}
+
+.modal-content {
+    background-color: #f8f8f8;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 80%;
+    width: 90%;
+    animation: scale-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy scale-in */
+}
+
+.modal-content h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2.5em;
+}
+
+.modal-content h3 {
+    color: #555;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.modal-content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 1.1em;
+    color: #666;
+}
+
+.modal-content li {
+    margin-bottom: 8px;
+}
+
+.modal-content kbd {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+.modal-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+.modal-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#high-score-list {
+    font-size: 1.1em;
+    color: #333;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+#high-score-list li {
+    padding: 5px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+#high-score-list li:last-child {
+    border-bottom: none;
+}
+
+
+/* Modal Scale-in Animation */
+@keyframes scale-in {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Balloon Styling */
+.balloon {
+    position: absolute;
+    width: 80px;
+    height: 95px; /* Slightly taller for balloon shape */
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Elliptical top */
+    background-color: #ff0000; /* Default color */
+    cursor: pointer; /* Keep pointer for individual balloons, overrides game-area for better UX */
+    box-shadow: inset -5px -5px 10px rgba(0, 0, 0, 0.3), /* Inner shadow for depth */
+                0 5px 15px rgba(0, 0, 0, 0.3); /* Outer shadow */
+    transition: transform 0.1s ease-out; /* For hover/active */
+    bottom: -100px; /* Start below screen */
+    z-index: 1; /* Below game info/messages */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    user-select: none; /* Prevent text selection */
+}
+
+/* Balloon string/tail */
+.balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -15px; /* Position below balloon body */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px; /* Length of the string */
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0 0 50% 50%; /* Tapered end */
+    z-index: -1; /* Behind the balloon body */
+}
+
+/* Balloon shine effect */
+.balloon::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 70%);
+    filter: blur(2px);
+    z-index: 2; /* On top of the balloon body */
+}
+
+/* Hover/Active effects for bouncy feel */
+.balloon:hover {
+    transform: scale(1.05);
+}
+.balloon:active {
+    transform: scale(0.95);
+}
+
+
+/* Balloon Color Variations */
+.balloon.red {
+    background: linear-gradient(to bottom right, #ff6b6b, #e00000);
+}
+.balloon.blue {
+    background: linear-gradient(to bottom right, #6bc1ff, #007bff);
+}
+.balloon.green {
+    background: linear-gradient(to bottom right, #6eff6b, #00c000);
+}
+.balloon.yellow {
+    background: linear-gradient(to bottom right, #ffe66b, #ffc107);
+}
+.balloon.purple {
+    background: linear-gradient(to bottom right, #b46bff, #8a00ff);
+}
+.balloon.gold {
+    background: linear-gradient(to bottom right, #ffd700, #daa520);
+    box-shadow: inset -5px -5px 10px rgba(255,255,0,0.5),
+                0 5px 20px rgba(255, 215, 0, 0.7);
+    border: 2px solid gold;
+}
+.balloon.freeze {
+    background: linear-gradient(to bottom right, #a0ffff, #00bfff);
+}
+.balloon.combo {
+    background: linear-gradient(to bottom right, #ffb6c1, #ff69b4);
+}
+
+/* Negative balloon specific styling */
+.balloon.negative {
+    transform: rotate(15deg); /* Slightly tilted */
+    border: 2px solid #a70000;
+}
+
+/* Balloon Movement Animations */
+@keyframes rise {
+    from { transform: translateY(0) translateX(0); }
+    to { transform: translateY(-120vh) translateX(0); }
+}
+
+@keyframes rise-slow {
+    from { transform: translateY(0) translateX(0); }
+    to { transform: translateY(-120vh) translateX(0); }
+}
+
+@keyframes rise-fast {
+    from { transform: translateY(0) translateX(0); }
+    to { transform: translateY(-120vh) translateX(0); }
+}
+
+/* Patterned movements */
+@keyframes zig-zag {
+    0% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-30vh) translateX(50px); }
+    50% { transform: translateY(-60vh) translateX(-50px); }
+    75% { transform: translateY(-90vh) translateX(50px); }
+    100% { transform: translateY(-120vh) translateX(0); }
+}
+
+@keyframes sway {
+    0% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-30vh) translateX(20px); }
+    50% { transform: translateY(-60vh) translateX(-20px); }
+    75% { transform: translateY(-90vh) translateX(20px); }
+    100% { transform: translateY(-120vh) translateX(0); }
+}
+
+/* Explosion Effect */
+.balloon.popped {
+    animation: explode 0.3s forwards; /* Animation for explosion */
+    pointer-events: none; /* Disable further clicks */
+    cursor: default; /* Change cursor to default when popped */
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: hue-rotate(0deg); /* Start hue */
+        box-shadow: inset 0 0 0 rgba(0,0,0,0.3); /* Reset inner shadow */
+    }
+    50% {
+        transform: scale(1.2) rotate(15deg); /* Grow and rotate */
+        opacity: 0.8;
+        filter: hue-rotate(90deg); /* Change hue for flashy effect */
+        box-shadow: inset 0 0 50px rgba(255,255,255,0.8), /* Inner glow */
+                    0 0 30px rgba(255,255,0,0.8); /* Outer glow */
+    }
+    100% {
+        transform: scale(0) rotate(180deg); /* Shrink and disappear */
+        opacity: 0;
+        filter: hue-rotate(180deg); /* Further hue change */
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #game-info {
+        font-size: 1.4em;
+        top: 5px;
+        left: 5px;
+        gap: 10px;
+    }
+
+    .balloon {
+        width: 60px;
+        height: 75px;
+        font-size: 1.2em;
+    }
+    .balloon::before {
+        width: 15px;
+        height: 15px;
+        top: 8px;
+        left: 10px;
+    }
+    .balloon::after {
+        height: 15px;
+        bottom: -10px;
+    }
+
+    #game-messages {
+        font-size: 2em;
+    }
+
+    .modal-content {
+        padding: 20px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.8em;
+    }
+
+    .modal-content h3 {
+        font-size: 1.3em;
+    }
+
+    .modal-content ul {
+        font-size: 1em;
+    }
+
+    .modal-button {
+        padding: 12px 25px;
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-info {
+        font-size: 1.2em;
+        gap: 8px;
+    }
+
+    .balloon {
+        width: 50px;
+        height: 60px;
+        font-size: 1em;
+    }
+    .balloon::before {
+        width: 10px;
+        height: 10px;
+        top: 6px;
+        left: 8px;
+    }
+    .balloon::after {
+        height: 10px;
+        bottom: -8px;
+    }
+
+    #game-messages {
+        font-size: 1.5em;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+
+    .modal-content h3 {
+        font-size: 1.1em;
+    }
+
+    .modal-content ul {
+        font-size: 0.9em;
+    }
+
+    .modal-button {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+}
